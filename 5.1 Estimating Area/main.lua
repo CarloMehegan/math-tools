@@ -86,7 +86,7 @@ end
 -- validate used to make sure that keys entered into inputs are numbers
 function validate(input)
   local len = utf8.len(input.text)
-  input.text = input.text:gsub("[^0-9]", "") --only 0-9
+  input.text = input.text:gsub("[^0-9-]", "") --only 0-9, and '-' negative sign
   input.cursor = input.cursor - (len - utf8.len(input.text)) --keep cursor from moving
 end
 

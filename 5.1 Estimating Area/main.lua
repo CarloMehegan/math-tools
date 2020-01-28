@@ -19,19 +19,41 @@ function love.load()
   inputb = {text = ""}
   inputN = {text = ""}
   slider = {value = 10, min = 2, max = 1000}
+  -- variables for manipulating f(x)
+  -- coefficeients for x^0, x^1, x^2, etc
+  x0 = {text = "0"}
+  x1 = {text = "0"}
+  x2 = {text = "0"}
+  x3 = {text = "0"}
+  x4 = {text = "0"}
 end
 
 function love.update(dt)
+  -- text inputs for the expression coefficients
+  -- the x positions were found with just trial and error to find a place where they look nice
+  suit.Input(x4,60,17,16,20)
+  validate(x4)
+  suit.Input(x3,124,17,16,20)
+  validate(x3)
+  suit.Input(x2,187,17,16,20)
+  validate(x2)
+  suit.Input(x1,250,17,16,20)
+  validate(x1)
+  suit.Input(x0,295,17,16,20)
+  validate(x0)
+  
+  -- buffer to move everything down so f(x) expression can be at the top
+  buffer = 40
   -- place textboxes
-  suit.Input(inputa, 20,40,200,30)
+  suit.Input(inputa, 20,40+buffer,200,30)
   validate(inputa)
-  suit.Input(inputb, 20,100,200,30)
+  suit.Input(inputb, 20,100+buffer,200,30)
   validate(inputb)
-  suit.Input(inputN, 20,190,200,30)
+  suit.Input(inputN, 20,190+buffer,200,30)
   validate(inputN)
   -- place slider and update inputN with slider
   -- compare to last slider value to check if it is changing before setting it
-  suit.Slider(slider, 20,160, 200,20)
+  suit.Slider(slider, 20,160+buffer, 200,20)
   if lastSliderValue ~= slider.value then
     inputN = {text = "" .. math.ceil(slider.value)}
   end
@@ -40,20 +62,21 @@ function love.update(dt)
   local newa, newb, newN = tonumber(inputa.text), tonumber(inputb.text), tonumber(inputN.text)
   if newa and newb and newN then
     if newN <= 10000000 then
-      if suit.Button("Do the math", 20,250,200,30).hit then doTheMath(newa,newb,newN) end
+      if suit.Button("Do the math", 20,250+buffer,200,30).hit then doTheMath(newa,newb,newN) end
     end
   end
 end
 
 function love.draw()
-  love.graphics.print("interval start (a)", 20, 20)
-  love.graphics.print("interval end (b)", 20, 80)
-  love.graphics.print("# of squares (N)", 20, 140)
-  love.graphics.print("right: " .. rightanswer .. "\nleft: " .. leftanswer .. "\nmiddle: " .. midanswer, 20, 300)
+  love.graphics.print("f(x) =      x^4 +      x^3 +      x^2 +      x +", 20, 20)
+  love.graphics.print("interval start (a)", 20, 20+buffer)
+  love.graphics.print("interval end (b)", 20, 80+buffer)
+  love.graphics.print("# of squares (N)", 20, 140+buffer)
+  love.graphics.print("right: " .. rightanswer .. "\nleft: " .. leftanswer .. "\nmiddle: " .. midanswer, 20, 300+buffer)
   --warning message if N is greater then 10mil. just because it slows down after this point.
   if tonumber(inputN.text) then 
       if tonumber(inputN.text) > 10000000 then 
-      love.graphics.print("too big! N must be less than 10 million.", 20,250) 
+      love.graphics.print("too big! N must be less than 10 million.", 20,250+buffer) 
     end 
   end
   suit.draw()
@@ -84,8 +107,10 @@ end
 -- the function the calculation is based off of
 -- this is the line whose area we're finding
 -- area referring to the area between the line and the x axis
+-- the user changes the coefficients to get the expression they need
+-- this is the smartest way i know to do this, but it is still very limited.
 function f(x)
-  return x*x + 1 --to do; let the user change this function
+  return tonumber(x4.text)*x*x*x*x + tonumber(x3.text)*x*x*x + tonumber(x2.text)*x*x + tonumber(x1.text)*x + tonumber(x0.text)
 end
 
 -- calculating the approximate are with three different methods

@@ -1,5 +1,5 @@
 # math-tools
-Carlo Mehegam
+Carlo Mehegan
 
 ### 5.1 Estimating Area
 Jan. 27, 2020
